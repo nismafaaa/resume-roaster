@@ -1,0 +1,29 @@
+# Python backend
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.pytest_cache/
+
+# Node/React frontend
+node_modules/
+dist/
+dist-ssr/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+
+# Build files
+/build
+.cache/
+
+# API keys and secrets
+.env
