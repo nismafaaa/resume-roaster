@@ -5,7 +5,13 @@ from dotenv import load_dotenv
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
+print(f"API Key loaded: {'Yes' if OPENROUTER_API_KEY else 'No'}")
+
 def roast_resume(text):
+    if not OPENROUTER_API_KEY:
+        raise ValueError("OpenRouter API key is missing. Please set the OPENROUTER_API_KEY environment variable.")
+    
+    # Rest of your existing code
     prompt = f"""
 You are a brutally honest career coach and hiring manager. Review the following resume and give:
 1. Harsh but constructive feedback

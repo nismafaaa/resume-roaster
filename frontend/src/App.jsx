@@ -91,7 +91,7 @@ function App() {
       </main>
       
       <footer className="app-footer">
-        <p>Built with FastAPI, React, and DeepSeek AI • <a href="https://github.com/yourusername/resume-roaster" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+        <p>Built with FastAPI, React, and DeepSeek AI • <a href="https://github.com/nismafaaa/resume-roaster" target="_blank" rel="noopener noreferrer">GitHub</a></p>
       </footer>
     </div>
   );

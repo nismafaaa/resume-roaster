@@ -60,7 +60,7 @@ const UploadForm = ({ setFile, file, loading, setLoading, setFeedback, setResume
 
     try {
       // Changed URL to relative path for proxy usage
-      const response = await axios.post('http://127.0.0.1:8000/review-resume/', formData, {
+      const response = await axios.post('/review-resume/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

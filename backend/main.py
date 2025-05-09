@@ -31,12 +31,20 @@ def extract_text_from_pdf(file: UploadFile) -> str:
 
 @app.post("/review-resume/")
 async def review_resume(file: UploadFile = File(...)):
-    if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+    try:
+        if file.content_type != "application/pdf":
+            raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
-    text = extract_text_from_pdf(file)
-    if not text:
-        raise HTTPException(status_code=400, detail="No text found in the uploaded PDF.")
+        text = extract_text_from_pdf(file)
+        if not text:
+            raise HTTPException(status_code=400, detail="No text found in the uploaded PDF.")
 
-    feedback = roast_resume(text)
-    return {"feedback": feedback}
+        feedback = roast_resume(text)
+        return {"feedback": feedback}
+    except Exception as e:
+        # Log the detailed error
+        import traceback
+        print(f"ERROR PROCESSING RESUME: {str(e)}")
+        print(traceback.format_exc())
+        # Re-raise as a 500 error with more details
+        raise HTTPException(status_code=500, detail=f"Error processing resume: {str(e)}")
