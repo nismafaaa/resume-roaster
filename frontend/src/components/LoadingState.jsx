@@ -4,7 +4,6 @@ const loadingMessages = [
   "Roasting in progress... prepping the AI flamethrower 🔥",
   "Analyzing your career choices... no judgment (maybe a little) 👀",
   "Scanning for buzzwords to ruthlessly eliminate ✂️",
-  "Teaching AI to be brutally honest but still constructive 🤖",
   "Finding the perfect balance between harsh and helpful 📊",
   "Comparing your resume to thousands of successful ones 📈",
   "Preparing to tell you what recruiters won't 🙊",
@@ -24,9 +23,7 @@ const LoadingState = () => {
   
   return (
     <div className="loading-container">
-      <div className="loading-spinner">
-        <div className="flame"></div>
-      </div>
+      <div className="loading-spinner"></div>
       <p className="loading-message">{loadingMessages[messageIndex]}</p>
     </div>
   );

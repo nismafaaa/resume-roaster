@@ -2,6 +2,8 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from model_utils import roast_resume
 import fitz  
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 app = FastAPI()
 
@@ -17,9 +19,8 @@ app.add_middleware(
 def root():
     return {"message": "Resume Roaster backend is alive 👊"}
 
-def extract_text_from_pdf(file: UploadFile) -> str:
+def extract_text_from_pdf_sync(file: UploadFile) -> str:
     try:
-        # Read the file into memory
         file_bytes = file.file.read()
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
             text = ""
@@ -35,16 +36,16 @@ async def review_resume(file: UploadFile = File(...)):
         if file.content_type != "application/pdf":
             raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
-        text = extract_text_from_pdf(file)
-        if not text:
-            raise HTTPException(status_code=400, detail="No text found in the uploaded PDF.")
+        loop = asyncio.get_event_loop()
+        with ThreadPoolExecutor() as pool:
+            text = await loop.run_in_executor(pool, extract_text_from_pdf_sync, file)
+            if not text:
+                raise HTTPException(status_code=400, detail="No text found in the uploaded PDF.")
+            feedback = await loop.run_in_executor(pool, roast_resume, text)
 
-        feedback = roast_resume(text)
-        return {"feedback": feedback}
+        return {"feedback": feedback, "resume_text": text}
     except Exception as e:
-        # Log the detailed error
         import traceback
         print(f"ERROR PROCESSING RESUME: {str(e)}")
         print(traceback.format_exc())
-        # Re-raise as a 500 error with more details
         raise HTTPException(status_code=500, detail=f"Error processing resume: {str(e)}")

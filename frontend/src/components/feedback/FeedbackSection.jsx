@@ -2,38 +2,43 @@ import React from 'react';
 import FeedbackCard from './FeedbackCard';
 
 const FeedbackSection = ({ feedback, activeSection, setActiveSection }) => {
-  // Function to parse feedback into sections (this is a simplified version)
+  // Parse feedback into sections using markdown headers
   const parseFeedback = (feedbackText) => {
-    // Split feedback by numbered points or headers
-    const sections = feedbackText.split(/\n(?=\d+\.|\#)/);
-    
-    // Create structured feedback sections (simplified example)
-    return {
-      general: {
-        title: "General Impression",
-        content: sections[0] || "No general feedback provided",
-        type: "info"
-      },
-      strengths: {
-        title: "Strengths",
-        content: sections.find(s => s.toLowerCase().includes("strength")) || "No strengths identified",
-        type: "success"
-      },
-      weaknesses: {
-        title: "Areas for Improvement",
-        content: sections.find(s => s.toLowerCase().includes("improve") || s.toLowerCase().includes("weak")) || "No improvement areas identified",
-        type: "warning"
-      },
-      actionItems: {
-        title: "Action Items",
-        content: sections.find(s => s.toLowerCase().includes("action") || s.toLowerCase().includes("step")) || "No specific action items provided",
-        type: "danger"
+    const sectionOrder = [
+      { key: 'general', header: '# Vibe Check', title: 'Vibe Check', type: 'info' },
+      { key: 'strengths', header: '# What Slaps', title: 'What Slaps', type: 'success' },
+      { key: 'weaknesses', header: '# Could Be Better', title: 'Red Flags', type: 'warning' },
+      { key: 'actionItems', header: '# Fix This Stuff', title: 'Make It Better', type: 'danger' }
+    ];
+    const sections = {};
+    if (!feedbackText) {
+      sectionOrder.forEach(({ key, title, type }) => {
+        sections[key] = { title, content: "No feedback provided.", type };
+      });
+      return sections;
+    }
+    // Updated regex to match new headers
+    const regex = /# (Vibe Check|What Slaps|Could Be Better|Fix This Stuff)\s*([\s\S]*?)(?=(?:\n# (?:Vibe Check|What Slaps|Could Be Better|Fix This Stuff))|$)/g;
+    let match;
+    while ((match = regex.exec(feedbackText)) !== null) {
+      const header = match[1];
+      const content = match[2].trim();
+      const section = sectionOrder.find(s => s.header === `# ${header}`);
+      if (section) {
+        sections[section.key] = { title: section.title, content, type: section.type };
       }
-    };
+    }
+    // Fill missing sections with a default message
+    sectionOrder.forEach(({ key, title, type }) => {
+      if (!sections[key] || !sections[key].content) {
+        sections[key] = { title, content: "No feedback provided.", type };
+      }
+    });
+    return sections;
   };
-  
+
   const feedbackSections = parseFeedback(feedback);
-  
+
   return (
     <div className="feedback-section">
       <div className="feedback-tabs">
@@ -47,7 +52,6 @@ const FeedbackSection = ({ feedback, activeSection, setActiveSection }) => {
           </button>
         ))}
       </div>
-      
       <div className="feedback-content">
         <FeedbackCard
           title={feedbackSections[activeSection].title}

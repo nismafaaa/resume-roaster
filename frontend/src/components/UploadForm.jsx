@@ -46,7 +46,6 @@ const UploadForm = ({ setFile, file, loading, setLoading, setFeedback, setResume
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!file) {
       setError('Please select a resume file');
       return;
@@ -54,33 +53,20 @@ const UploadForm = ({ setFile, file, loading, setLoading, setFeedback, setResume
 
     setLoading(true);
     setError(null);
-    
+
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      // Changed URL to relative path for proxy usage
       const response = await axios.post('http://127.0.0.1:8000/review-resume/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      
-      // Get the text content of the PDF to display in the preview
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          // Store the raw text for preview
-          setResumeText("Your resume text will appear here");
-          setFeedback(response.data.feedback);
-        } catch (error) {
-          console.error('Error reading PDF text:', error);
-        }
-      };
-      reader.readAsArrayBuffer(file);
-      
+      setResumeText(response.data.resume_text);
+      setFeedback(response.data.feedback);
+      setLoading(false);
     } catch (err) {
-      console.error('Full error response:', err.response); // Added extra logging
       setError(err.response?.data?.detail || 'An error occurred while processing your resume');
       setLoading(false);
     }

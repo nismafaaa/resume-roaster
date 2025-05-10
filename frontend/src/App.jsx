@@ -18,11 +18,13 @@ function App() {
         <div className="logo-container">
           <h1>Resume Roaster <span className="fire-emoji">🔥</span></h1>
         </div>
-        <p className="tagline">Get brutally honest, actionable feedback on your resume</p>
+        <p className="tagline">We’ll hit you with real, actionable feedback that actually helps you stand out. No fluff, just facts.</p>
       </header>
 
       <main className="app-main">
-        {!feedback ? (
+        {loading ? (
+          <LoadingState />
+        ) : !feedback ? (
           <div className="upload-container">
             <UploadForm 
               setFile={setFile}
@@ -34,22 +36,13 @@ function App() {
           </div>
         ) : (
           <div className="feedback-container">
-            <div className="column resume-column">
-              <h2>Your Resume</h2>
-              <ResumePreview resumeText={resumeText} />
-            </div>
-            
             <div className="column feedback-column">
               <h2>Feedback</h2>
-              {loading ? (
-                <LoadingState />
-              ) : (
-                <FeedbackSection 
-                  feedback={feedback}
-                  activeSection={activeSection}
-                  setActiveSection={setActiveSection}
-                />
-              )}
+              <FeedbackSection 
+                feedback={feedback}
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+              />
             </div>
             
             <div className="column actions-column">
@@ -80,9 +73,39 @@ function App() {
               <div className="tips-container">
                 <h3>Pro Tips</h3>
                 <ul className="tips-list">
-                  <li><span className="tip-badge good">✅</span> Focus on quantifiable achievements</li>
-                  <li><span className="tip-badge warning">⚠️</span> Avoid generic statements</li>
-                  <li><span className="tip-badge danger">❌</span> Don't include irrelevant experience</li>
+                  <li>
+                    <span className="tip-badge good">✅</span>
+                    <span className="tip-content">
+                      <span className="tip-title">
+                        Flex With Facts
+                      </span>
+                      <span className="tip-desc">
+                        Drop numbers. "Increased sales by 42%" hits harder than "helped with marketing."
+                      </span>
+                    </span>
+                  </li>
+                  <li>
+                    <span className="tip-badge good">✅</span>
+                    <span className="tip-content">
+                      <span className="tip-title">
+                        Cut the Buzzwords
+                      </span>
+                      <span className="tip-desc">
+                        "Hardworking, passionate team player"? Yeah, so is everyone. Say what you did.
+                      </span>
+                    </span>
+                  </li>
+                  <li>
+                    <span className="tip-badge good">✅</span>
+                    <span className="tip-content">
+                      <span className="tip-title">
+                        Keep It Relevant
+                      </span>
+                      <span className="tip-desc">
+                        Your panitia experience doesn’t belong unless it actually relates to the job. Stay on target.
+                      </span>
+                    </span>
+                  </li>
                 </ul>
               </div>
             </div>
