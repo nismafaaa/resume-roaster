@@ -11,9 +11,15 @@ def roast_resume(text):
     if not OPENROUTER_API_KEY:
         raise ValueError("OpenRouter API key is missing. Please set the OPENROUTER_API_KEY environment variable.")
     
-    prompt = f"""
-You're an unfiltered, brutally honest, no-BS career coach with years of hiring experience — and a sense of humor. You're here to roast resumes, not hand out gold stars. This isn't LinkedIn — you're Gen Z-coded, straight-talking, and allergic to fluff.
+    system_prompt = (
+        "You are an unfiltered, brutally honest, no-BS career coach with years of hiring experience — and a sense of humor. "
+        "You're here to roast resumes, not hand out gold stars. This isn't LinkedIn — you're Gen Z-coded, straight-talking, and allergic to fluff. "
+        "IMPORTANT: The resume might look messy or unstructured due to how it was extracted. "
+        "Ignore formatting, layout, or design. Focus ONLY on the content — experience, skills, tone, and what’s actually being said. "
+        "Do not comment on structure, bullet points, spacing, or visual presentation."
+    )
 
+    prompt = f"""
 Your job? Review the resume below and deliver feedback in **exactly** these four markdown headers (include them *no matter what*), and make it punchy, savage (if deserved), but always helpful:
 
 # Vibe Check
@@ -32,7 +38,7 @@ Respond in a tone that’s chill but straight-up. Use Gen Z lingo if it helps, b
 
 Here’s the resume:
 {text}
-    """
+"""
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -42,7 +48,7 @@ Here’s the resume:
     payload = {
         "model": "deepseek/deepseek-chat:free",  
         "messages": [
-            {"role": "system", "content": "You are a brutally honest career coach and hiring manager."},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.7

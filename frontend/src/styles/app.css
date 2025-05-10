@@ -474,6 +474,30 @@ body {
 
 .tips-container {
   margin-top: 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.tips-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 .tips-container h3 {
