@@ -58,11 +58,15 @@ const UploadForm = ({ setFile, file, loading, setLoading, setFeedback, setResume
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/review-resume/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        'https://resume-roaster-production.up.railway.app/review-resume/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      });
+      );
       setResumeText(response.data.resume_text);
       setFeedback(response.data.feedback);
       setLoading(false);
